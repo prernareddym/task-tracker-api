@@ -1,0 +1,34 @@
+# Local development stack: PostgreSQL + the API.
+# The JWT secret below is a throwaway value for local use only; set your own for anything else.
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: tasktracker
+      POSTGRES_USER: tasktracker
+      POSTGRES_PASSWORD: tasktracker
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tasktracker -d tasktracker"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  api:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/tasktracker
+      DB_USERNAME: tasktracker
+      DB_PASSWORD: tasktracker
+      JWT_SECRET: ${JWT_SECRET:-local-dev-only-secret-change-me-0123456789}
+    ports:
+      - "8080:8080"
+
+volumes:
+  pgdata:
