@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: task-tracker-api
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/tasktracker}
+    username: ${DB_USERNAME:tasktracker}
+    password: ${DB_PASSWORD:tasktracker}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate   # schema is owned by Flyway migrations
+  flyway:
+    enabled: true
+
+app:
+  jwt:
+    secret: ${JWT_SECRET:}          # required, min 32 chars; app fails fast if missing
+    expiration-minutes: ${JWT_EXPIRATION_MINUTES:60}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
