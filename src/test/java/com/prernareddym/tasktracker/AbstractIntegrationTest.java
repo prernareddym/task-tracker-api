@@ -36,7 +36,7 @@ public abstract class AbstractIntegrationTest {
 
     @BeforeEach
     void cleanDatabase() {
-        jdbc.execute("TRUNCATE TABLE users RESTART IDENTITY CASCADE");
+        jdbc.execute("TRUNCATE TABLE tasks, users RESTART IDENTITY CASCADE");
     }
 
     /** Registers a user and returns the bearer token. */
